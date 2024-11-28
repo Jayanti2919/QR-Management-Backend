@@ -6,21 +6,24 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ObjectId } from 'mongodb';
 
 @Controller('qr')
-@UseGuards(JwtAuthGuard)
+
 export class QrCodeController {
   constructor(private readonly qrCodeService: QrCodeService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('create-qr')
   async createDynamicQr(@Request() req, @Body() dto: CreateQrDto) {
     return this.qrCodeService.createQrCode(req.user.id, dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id/update')
   async updateDynamicQr(@Request() req, @Param('id') id: string, @Body() dto: UpdateQrDto) {
     const newId = new ObjectId(id);
     return this.qrCodeService.updateDynamicQr(req.user.id, newId, dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('my-codes')
   async getMyQrCodes(@Request() req) {
     return this.qrCodeService.getUserQrCodes(req.user.id);
