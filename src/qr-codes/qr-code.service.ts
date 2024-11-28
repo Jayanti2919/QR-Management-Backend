@@ -5,14 +5,16 @@ import { QrCode } from './entities/qr-code.entity';
 import { CreateQrDto } from './dto/create-qr.dto';
 import { UpdateQrDto } from './dto/update-qr.dto';
 import { ObjectId } from 'mongodb';
+import { QrCodeGenerator } from 'src/common/utils/qr-code-generator';
 
 @Injectable()
 export class QrCodeService {
   constructor(
     @InjectRepository(QrCode) private readonly qrCodeRepository: Repository<QrCode>,
+    private readonly qrCodeGenerator: QrCodeGenerator,
   ) {}
 
-  async createQrCode(userId: string, dto: CreateQrDto): Promise<QrCode> {
+  async createQrCode(userId: string, dto: CreateQrDto): Promise<{ qrCode: QrCode; qrCodeDataUrl: string }> {
     const qrCode = this.qrCodeRepository.create({
       userId,
       type: dto.type,
@@ -20,7 +22,9 @@ export class QrCodeService {
       dynamicId: dto.type === 'dynamic' ? this.generateDynamicId() : null,
       createdAt: new Date(),
     });
-    return this.qrCodeRepository.save(qrCode);
+    await this.qrCodeRepository.save(qrCode);
+    const qrCodeDataUrl = await this.qrCodeGenerator.generateQrCode(qrCode.url);
+    return { qrCode, qrCodeDataUrl };
   }
 
   async updateDynamicQr(userId: string, id: ObjectId, dto: UpdateQrDto): Promise<QrCode> {
