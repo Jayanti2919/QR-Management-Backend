@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { QrCode } from './entities/qr-code.entity';
 import { QrCodeGenerator } from 'src/common/utils/qr-code-generator';
 import { QrRedirectController } from './qr-redirect.controller';
+import { EventsModule } from '../events/events.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([QrCode])],
+  imports: [TypeOrmModule.forFeature([QrCode]), EventsModule],
   controllers: [QrCodeController, QrRedirectController],
   providers: [QrCodeService, QrCodeGenerator],
 })
