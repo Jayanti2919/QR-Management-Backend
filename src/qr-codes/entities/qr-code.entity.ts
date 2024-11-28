@@ -22,4 +22,7 @@ export class QrCode {
 
   @Column({ nullable: true })
   updatedAt: Date;
+
+  @Column()
+  qrImageUrl: string;
 }

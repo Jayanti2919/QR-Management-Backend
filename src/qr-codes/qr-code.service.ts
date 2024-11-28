@@ -15,15 +15,28 @@ export class QrCodeService {
   ) {}
 
   async createQrCode(userId: string, dto: CreateQrDto): Promise<{ qrCode: QrCode; qrCodeDataUrl: string }> {
-    const qrCode = this.qrCodeRepository.create({
+    var dynamicId = null;
+    if(dto.type === 'dynamic') {
+      dynamicId = this.generateDynamicId();
+    }
+    var qrCode = this.qrCodeRepository.create({
       userId,
       type: dto.type,
       url: dto.url,
-      dynamicId: dto.type === 'dynamic' ? this.generateDynamicId() : null,
+      dynamicId: dynamicId,
       createdAt: new Date(),
     });
     await this.qrCodeRepository.save(qrCode);
-    const qrCodeDataUrl = await this.qrCodeGenerator.generateQrCode(qrCode.url);
+    if(dto.type === 'static') {
+      const qrCodeDataUrl = await this.qrCodeGenerator.generateQrCode(dto.url);
+      qrCode.qrImageUrl = qrCodeDataUrl;
+      await this.qrCodeRepository.save(qrCode);
+      return { qrCode, qrCodeDataUrl };
+    }
+    const qrCodeUrl = "http://localhost:3000/qr/" + dynamicId;
+    const qrCodeDataUrl = await this.qrCodeGenerator.generateQrCode(qrCodeUrl);
+    qrCode.qrImageUrl = qrCodeDataUrl;
+    await this.qrCodeRepository.save(qrCode);
     return { qrCode, qrCodeDataUrl };
   }
 
@@ -43,6 +56,6 @@ export class QrCodeService {
   }
 
   private generateDynamicId(): string {
-    return Math.random().toString(36).substr(2, 10);
+    return new ObjectId().toHexString();
   }
 }
