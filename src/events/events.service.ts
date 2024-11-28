@@ -42,6 +42,7 @@ export class EventsService {
     const trends = this.calculateTrends(events);
     const platforms = this.calculatePlatforms(events);
     const devices = this.calculateDevices(events);
+    const locations = this.calculateLocations(events);
 
     return {
       totalScans,
@@ -49,6 +50,7 @@ export class EventsService {
       trends,
       platforms,
       devices,
+      locations,
     };
   }
 
@@ -75,5 +77,13 @@ export class EventsService {
       devices[event.device] = (devices[event.device] || 0) + 1;
     });
     return devices;
+  }
+
+  private calculateLocations(events: Event[]) {
+    const locations = {};
+    events.forEach((event) => {
+      locations[event.location] = (locations[event.location] || 0) + 1;
+    });
+    return locations;
   }
 }
