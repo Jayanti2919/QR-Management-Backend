@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty()
@@ -14,5 +14,6 @@ export class RegisterDto {
  
   @ApiProperty()
   @IsString()
+  @IsOptional()
   role: string;
 }

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InsertValuesMissingError, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
 
@@ -14,8 +14,11 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<{message: string, username: string, role: string}> {
+    if(!dto.username || !dto.password) {
+      throw new Error("Username and password are required");
+    }
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-
+    
     var user = null;
     if (!dto.role) {
       user = this.userRepository.create({ ...dto, role: "user", password: hashedPassword });
@@ -25,8 +28,11 @@ export class AuthService {
     await this.userRepository.save(user);
     return { message: "User created successfully", username: user.username, role: user.role };
   } 
-
+  
   async login(username: string, password: string): Promise<{ accessToken: string }> {
+    if(!username || !password) {
+      throw new Error("Username and password are required");
+    }
     const user = await this.userRepository.findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
