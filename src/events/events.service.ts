@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './entities/event.entity';
 import { TrackEventDto } from './dto/track-event.dto';
-import { QrCode } from 'src/qr-codes/entities/qr-code.entity';
+import { QrCode } from '../qr-codes/entities/qr-code.entity';
 import { ObjectId } from 'mongodb';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import OpenAI from 'openai';
