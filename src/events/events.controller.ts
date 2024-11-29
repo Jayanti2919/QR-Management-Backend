@@ -2,8 +2,10 @@ import { Controller, Post, Get, Param, Body, UseGuards, Request } from '@nestjs/
 import { EventsService } from './events.service';
 import { TrackEventDto } from './dto/track-event.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('qr/:id')
+@ApiTags('docs')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 

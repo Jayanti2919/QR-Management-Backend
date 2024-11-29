@@ -4,8 +4,10 @@ import { CreateQrDto } from './dto/create-qr.dto';
 import { UpdateQrDto } from './dto/update-qr.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ObjectId } from 'mongodb';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('qr')
+@ApiTags('docs')
 @UseGuards(JwtAuthGuard)
 export class QrCodeController {
   constructor(private readonly qrCodeService: QrCodeService) {}
