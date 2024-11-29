@@ -9,7 +9,7 @@ import { QrCode } from './entities/qr-code.entity';
 import { CreateQrDto } from './dto/create-qr.dto';
 import { UpdateQrDto } from './dto/update-qr.dto';
 import { ObjectId } from 'mongodb';
-import { QrCodeGenerator } from 'src/common/utils/qr-code-generator';
+import { QrCodeGenerator } from '../common/utils/qr-code-generator';
 
 @Injectable()
 export class QrCodeService {
@@ -47,8 +47,7 @@ export class QrCodeService {
     const qrCode = await this.qrCodeRepository.findOne({ where: { _id: id } });
     if (!qrCode) throw new NotFoundException('QR Code not found');
     if (qrCode.userId !== userId) throw new ForbiddenException('Access denied');
-    if (qrCode.type !== 'dynamic')
-      throw new ForbiddenException('Cannot update a static QR code');
+    if (qrCode.type === 'static') throw new ForbiddenException('Cannot update a static QR code');
 
     qrCode.url = dto.newUrl;
     qrCode.updatedAt = new Date();
