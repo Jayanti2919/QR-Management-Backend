@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, isString } from 'class-validator';
 
 export class TrackEventDto {
   @IsString()
@@ -16,4 +16,8 @@ export class TrackEventDto {
   @IsString()
   @IsNotEmpty()
   ip: string;
+
+  @IsString()
+  @IsNotEmpty()
+  url: string;
 }

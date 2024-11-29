@@ -46,7 +46,8 @@ export class QrRedirectController {
       location: geo ? `${geo.city}, ${geo.country}` : 'Unknown',
       device: this.getDeviceType(userAgent),
       platform: this.getPlatform(userAgent),
-      ip,
+      ip: ip,
+      url: qrCode.url,
     };
     await this.eventsService.trackEvent(qrCode._id.toString(), event);
 

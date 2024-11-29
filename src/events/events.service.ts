@@ -43,6 +43,7 @@ export class EventsService {
     const platforms = this.calculatePlatforms(events);
     const devices = this.calculateDevices(events);
     const locations = this.calculateLocations(events);
+    const urls = this.calculateUrlClicks(events);
 
     return {
       totalScans,
@@ -51,6 +52,7 @@ export class EventsService {
       platforms,
       devices,
       locations,
+      urls,
     };
   }
 
@@ -85,5 +87,13 @@ export class EventsService {
       locations[event.location] = (locations[event.location] || 0) + 1;
     });
     return locations;
+  }
+
+  private calculateUrlClicks(events: Event[]) {
+    const urls = {};
+    events.forEach((event) => {
+      urls[event.url] = (urls[event.url] || 0) + 1;
+    });
+    return urls;
   }
 }

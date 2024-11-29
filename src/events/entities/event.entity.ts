@@ -22,4 +22,7 @@ export class Event {
 
   @Column()
   ip: string;
+
+  @Column()
+  url: string;
 }
